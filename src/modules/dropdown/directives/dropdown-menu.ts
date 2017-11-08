@@ -164,7 +164,7 @@ export class SuiDropdownMenu extends SuiTransition implements AfterContentInit {
         if (this._service.isOpen && !this._service.isNested) {
             // Stop document events like scrolling while open.
             const target = e.target as Element;
-            if (!/input/i.test(target.tagName) &&
+            if (!/input|textarea/i.test(target.tagName) &&
                 [KeyCode.Escape, KeyCode.Enter, KeyCode.Up, KeyCode.Down, KeyCode.Left, KeyCode.Right].find(kC => kC === e.keyCode)) {
                 e.preventDefault();
             }
@@ -191,7 +191,9 @@ export class SuiDropdownMenu extends SuiTransition implements AfterContentInit {
                     this.selectedItems.pop();
                     this.selectedItems.push(selectedContainer.updateSelection(selected, e.keyCode));
                     // Prevent default regardless of whether we are in an input, to stop jumping to the start or end of the query string.
-                    e.preventDefault();
+                    if (!/textarea/i.test(target.tagName)) {
+                        e.preventDefault();
+                    }
                     break;
                 }
                 // Enter : if the item doesn't contain a nested dropdown, 'click' it. Otherwise, fall through to 'Right' action.
